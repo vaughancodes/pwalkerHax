@@ -35,4 +35,5 @@ u32 ir_rx_read(void *data, u32 max);
 void ir_rx_end(void);
 
 // Tunable bitrate
+void ir_setbitrate(u16 value);
 extern u16 g_bitrate;
