@@ -31,7 +31,7 @@ bool ir_init(u16 bitrate)
 	I2C_init();
 	ir_setbitrate(bitrate);
 
-    printf("Initialized with bitrate: %d", bitrate);
+    printf("Initialized with bitrate: %d\n", bitrate);
 	return true;
 }
 
