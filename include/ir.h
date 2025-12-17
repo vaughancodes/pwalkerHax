@@ -22,7 +22,7 @@
 #define RX_TIMEOUT		40000	// 4s (?)
 
 // Initialize and exit IR
-bool ir_init(void);
+bool ir_init(u16 value);
 // Call these functions before and after sending/receiving data
 void ir_enable(void);
 void ir_disable(void);
@@ -33,8 +33,3 @@ void ir_rx_begin(void);
 u8 ir_rx_available(void);
 u32 ir_rx_read(void *data, u32 max);
 void ir_rx_end(void);
-
-// Tunable bitrate
-void ir_setbitrate(u16 value);
-void ir_apply_divisor(u16 div);
-extern u16 g_bitrate;
