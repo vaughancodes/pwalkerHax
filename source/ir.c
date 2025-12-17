@@ -144,3 +144,11 @@ void ir_rx_end(void)
     // Disable FIFO
     I2C_write(REG_FCR, 0);
 }
+
+void ir_rx_rearm(void)
+{
+    // Reset and enable RX FIFO
+    I2C_write(REG_FCR, 0x03);
+    // Enable receiver
+    I2C_write(REG_EFCR, 0x04);
+}
