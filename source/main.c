@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 			ir_disable();
 			ir_init();
 			ir_enable();
-			ir_rx_start();
+			ir_rx_begin();
             printf("bitrate(divisor)=%u\n", g_bitrate);
         }
         if (down & KEY_DRIGHT) {
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 			ir_disable();
 			ir_init();
 			ir_enable();
-			ir_rx_start();
+			ir_rx_begin();
             printf("bitrate(divisor)=%u\n", g_bitrate);
         }
 
