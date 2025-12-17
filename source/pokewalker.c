@@ -90,6 +90,8 @@ bool wait_adv()
 
 	ir_recv_data(&adv, 1);
 
+    printf("Received byte: %02hhX\n", adv);
+
 	return adv == 0x56;
 }
 
