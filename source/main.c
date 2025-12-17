@@ -30,14 +30,16 @@ int main(int argc, char* argv[])
 
         if (down & KEY_DLEFT) {
             if (g_bitrate > 1) g_bitrate--;
+			ir_rx_end();
             ir_setbitrate(g_bitrate);
-			ir_rx_rearm();
+			ir_rx_begin();
             printf("bitrate(divisor)=%u\n", g_bitrate);
         }
         if (down & KEY_DRIGHT) {
             g_bitrate++;
+			ir_rx_end();
             ir_setbitrate(g_bitrate);
-			ir_rx_rearm();
+			ir_rx_begin();
             printf("bitrate(divisor)=%u\n", g_bitrate);
         }
 
