@@ -25,13 +25,27 @@ int main(int argc, char* argv[])
 		if (op == OP_EXIT)
 			break;
 		else if (op == OP_UPDATE)
-			ui_draw();
-		
-		u8 adv = 0;
-		ir_recv_data(&adv, 1);
-		printf("Received byte: %02X\n", adv);
+			ui_draw();		
+
+        u32 n = ir_rx_read(buf, sizeof(buf));
+        if (n) {
+            for (u32 i = 0; i < n; i++) {
+                printf("%02X ", buf[i]);
+            }
+            printf("\n");
+
+            // Also show XOR-decoded view
+            for (u32 i = 0; i < n; i++) {
+                printf("%02X ", (u8)(buf[i] ^ 0xAA));
+            }
+            printf("\n");
+        }
+
+        // small sleep so printing doesn’t starve everything
+        svcSleepThread(1 * 1000 * 1000); // 1ms
 	}
 
+    ir_rx_end();
     ir_disable();
 	ui_exit();
 	gfxExit();

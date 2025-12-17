@@ -111,3 +111,34 @@ u32 ir_recv_data(void *data, u32 size)
 
 	return tc;
 }
+
+void ir_rx_begin(void)
+{
+    // Reset and enable RX FIFO
+    I2C_write(REG_FCR, 0x03);
+    // Enable receiver
+    I2C_write(REG_EFCR, 0x04);
+}
+
+u8 ir_rx_available(void)
+{
+    return I2C_read(REG_RXLVL);
+}
+
+u32 ir_rx_read(void *data, u32 max)
+{
+    u8 lvl = I2C_read(REG_RXLVL);
+    if (!lvl) return 0;
+
+    if (lvl > max) lvl = (u8)max;
+    I2C_readArray(REG_FIFO, (u8 *)data, lvl);
+    return lvl;
+}
+
+void ir_rx_end(void)
+{
+    // Disable transmitter and receiver
+    I2C_write(REG_EFCR, 0x06);
+    // Disable FIFO
+    I2C_write(REG_FCR, 0);
+}
