@@ -145,10 +145,13 @@ void ir_rx_end(void)
     I2C_write(REG_FCR, 0);
 }
 
-void ir_rx_rearm(void)
+void ir_apply_divisor(u16 div)
 {
-    // Reset and enable RX FIFO
-    I2C_write(REG_FCR, 0x03);
-    // Enable receiver
-    I2C_write(REG_EFCR, 0x04);
+    ir_rx_end();
+    svcSleepThread(2 * 1000 * 1000); // 2ms
+
+    ir_setbitrate(div);
+
+    svcSleepThread(2 * 1000 * 1000); // 2ms
+    ir_rx_begin();
 }
