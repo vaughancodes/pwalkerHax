@@ -48,3 +48,5 @@ If you appreciate my works and want to support me, you can offer me a coffee :co
 
 - **BTC**: `bc1qvvjndu7mqe9l2ze4sm0eqzkq839m0w6ldms8ex`
 - **PayPal**: [![](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAZDH3SM7T9P6)
+
+Forked by: Daniel Vaughan
