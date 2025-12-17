@@ -16,6 +16,7 @@ int main(int argc, char* argv[])
 
 	ui_init();
 	ir_init();
+	ir_enable();
 
 	ui_draw();
 	threadCreate((ThreadFunc) updates_check, (void *) VER, 1024, prio - 1, -2, true);
@@ -25,8 +26,13 @@ int main(int argc, char* argv[])
 			break;
 		else if (op == OP_UPDATE)
 			ui_draw();
+		
+		u8 adv = 0;
+		ir_recv_data(&adv, 1)
+		printf("Received byte: %02X\n", adv);
 	}
 
+    ir_disable();
 	ui_exit();
 	gfxExit();
 	return 0;
