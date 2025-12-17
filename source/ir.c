@@ -20,6 +20,25 @@ void ir_setbitrate(u16 value)
 	I2C_write(REG_IER, BIT(4));
 }
 
+void ir_apply_divisor(u16 div)
+{
+    // Stop RX/TX and FIFO
+    I2C_write(REG_EFCR, 0x06);
+    I2C_write(REG_FCR,  0x00);
+
+    // tiny settle
+    svcSleepThread(2 * 1000 * 1000);
+
+    // program divisor
+    ir_setbitrate(div);
+
+    svcSleepThread(2 * 1000 * 1000);
+
+    // re-arm RX
+    I2C_write(REG_FCR,  0x03);  // reset+enable FIFO
+    I2C_write(REG_EFCR, 0x04);  // enable receiver
+}
+
 bool ir_init(u16 bitrate)
 {
 	//static bool inited = false;
@@ -29,7 +48,7 @@ bool ir_init(u16 bitrate)
 	//inited = true;
 
 	I2C_init();
-	ir_setbitrate(bitrate);
+	ir_apply_divisor(bitrate);
 
     printf("Initialized with bitrate: %d\n", bitrate);
 	return true;
