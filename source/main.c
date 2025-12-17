@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 			ui_draw();
 		
 		u8 adv = 0;
-		ir_recv_data(&adv, 1)
+		ir_recv_data(&adv, 1);
 		printf("Received byte: %02X\n", adv);
 	}
 
