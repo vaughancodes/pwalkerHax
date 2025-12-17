@@ -163,14 +163,3 @@ void ir_rx_end(void)
     // Disable FIFO
     I2C_write(REG_FCR, 0);
 }
-
-void ir_apply_divisor(u16 div)
-{
-    ir_rx_end();
-    svcSleepThread(2 * 1000 * 1000); // 2ms
-
-    ir_setbitrate(div);
-
-    svcSleepThread(2 * 1000 * 1000); // 2ms
-    ir_rx_begin();
-}
