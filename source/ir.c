@@ -1,6 +1,7 @@
 #include "ir.h"
 #include "i2c.h"
 #include <stdbool.h>
+#include <stdio.h>
 #include <3ds/types.h>
 
 void ir_setbitrate(u16 value)
