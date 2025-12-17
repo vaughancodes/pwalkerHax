@@ -20,6 +20,9 @@ int main(int argc, char* argv[])
 
 	ui_draw();
 	threadCreate((ThreadFunc) updates_check, (void *) VER, 1024, prio - 1, -2, true);
+	
+	u8 buf[64];
+	
 	while (aptMainLoop()) {
 		op = ui_update();
 		if (op == OP_EXIT)
