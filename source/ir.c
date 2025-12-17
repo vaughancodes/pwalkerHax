@@ -61,7 +61,7 @@ bool ir_init()
 	//inited = true;
 
 	I2C_init();
-	ir_configure_div10_now()
+	ir_configure_div10_now();
 
 	return true;
 }
