@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <3ds/types.h>
 
+static u16 g_bitrate = 10;
+
 void ir_setbitrate(u16 value)
 {
 	u8 lcr = I2C_read(REG_LCR);
@@ -28,7 +30,7 @@ bool ir_init(void)
 	inited = true;
 
 	I2C_init();
-	ir_setbitrate(10);
+	ir_setbitrate(g_bitrate);
 
 	return true;
 }

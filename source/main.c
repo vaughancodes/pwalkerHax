@@ -25,6 +25,20 @@ int main(int argc, char* argv[])
 	u8 buf[64];
 	
 	while (aptMainLoop()) {
+		hidScanInput();
+        u32 down = hidKeysDown();
+
+        if (down & KEY_DLEFT) {
+            if (g_bitrate > 1) g_bitrate--;
+            ir_setbitrate(g_bitrate);
+            printf("bitrate(divisor)=%u\n", g_bitrate);
+        }
+        if (down & KEY_DRIGHT) {
+            g_bitrate++;
+            ir_setbitrate(g_bitrate);
+            printf("bitrate(divisor)=%u\n", g_bitrate);
+        }
+
 		op = ui_update();
 		if (op == OP_EXIT)
 			break;
