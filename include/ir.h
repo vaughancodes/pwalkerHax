@@ -22,7 +22,7 @@
 #define RX_TIMEOUT		40000	// 4s (?)
 
 // Initialize and exit IR
-bool ir_init(u16 value);
+bool ir_init(void);
 // Call these functions before and after sending/receiving data
 void ir_enable(void);
 void ir_disable(void);
@@ -33,3 +33,5 @@ void ir_rx_begin(void);
 u8 ir_rx_available(void);
 u32 ir_rx_read(void *data, u32 max);
 void ir_rx_end(void);
+void ir_configure_div10_now(void);
+void ir_flush_fifo(void);

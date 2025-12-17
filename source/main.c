@@ -9,14 +9,13 @@ int main(int argc, char* argv[])
 {
 	enum operation op;
 	s32 prio;
-	u16 g_bitrate = 10;
 	
 	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
 
 	gfxInitDefault();
 
 	ui_init();
-	ir_init(g_bitrate);
+	ir_init();
 	ir_enable();
 
 	ui_draw();
@@ -28,25 +27,6 @@ int main(int argc, char* argv[])
 	while (aptMainLoop()) {
 		hidScanInput();
         u32 down = hidKeysDown();
-
-        if (down & KEY_DLEFT) {
-            if (g_bitrate > 1) g_bitrate--;
-			ir_rx_end();
-			ir_disable();
-			ir_init(g_bitrate);
-			ir_enable();
-			ir_rx_begin();
-            printf("bitrate(divisor)=%u\n", g_bitrate);
-        }
-        if (down & KEY_DRIGHT) {
-            g_bitrate++;
-			ir_rx_end();
-			ir_disable();
-			ir_init(g_bitrate);
-			ir_enable();
-			ir_rx_begin();
-            printf("bitrate(divisor)=%u\n", g_bitrate);
-        }
 
 		op = ui_update();
 		if (op == OP_EXIT)

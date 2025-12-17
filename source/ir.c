@@ -4,42 +4,55 @@
 #include <stdio.h>
 #include <3ds/types.h>
 
-void ir_setbitrate(u16 value)
+void ir_flush_fifo(void)
 {
-	u8 lcr = I2C_read(REG_LCR);
-
-	// Enable access to DLL and DLH
-	I2C_write(REG_LCR, lcr | BIT(7));
-	// Disable sleep mode
-	I2C_write(REG_IER, 0);
-
-	I2C_write(REG_DLL, value & 0xFF);
-	I2C_write(REG_DLH, (value >> 8) & 0xFF);
-
-	I2C_write(REG_LCR, lcr);
-	I2C_write(REG_IER, BIT(4));
+    for (int k = 0; k < 32; k++) {
+        u8 lvl = I2C_read(REG_RXLVL);
+        if (!lvl) break;
+        u8 tmp[64];
+        if (lvl > sizeof(tmp)) lvl = sizeof(tmp);
+        I2C_readArray(REG_FIFO, tmp, lvl);
+    }
 }
 
-void ir_apply_divisor(u16 div)
+void ir_configure_div10_now(void)
 {
-    // Stop RX/TX and FIFO
-    I2C_write(REG_EFCR, 0x06);
-    I2C_write(REG_FCR,  0x00);
+    // Hard stop
+    I2C_write(REG_EFCR, 0x06);     // disable TX/RX
+    I2C_write(REG_FCR,  0x00);     // disable FIFO
+    I2C_write(REG_IER,  0x00);     // disable sleep
+    I2C_write(REG_IOSTATE, 0x00);  // sane IO state
 
-    // tiny settle
-    svcSleepThread(2 * 1000 * 1000);
+    svcSleepThread(2 * 1000 * 1000); // 2ms
 
-    // program divisor
-    ir_setbitrate(div);
+    // Force 8N1 with DLAB clear
+    I2C_write(REG_LCR, 0x03);
 
-    svcSleepThread(2 * 1000 * 1000);
+    // Program divisor = 10 (DLAB=1)
+    I2C_write(REG_LCR, 0x03 | BIT(7));
+    I2C_write(REG_DLL, 10);
+    I2C_write(REG_DLH, 0);
+    I2C_write(REG_LCR, 0x03);      // DLAB clear, 8N1
 
-    // re-arm RX
-    I2C_write(REG_FCR,  0x03);  // reset+enable FIFO
-    I2C_write(REG_EFCR, 0x04);  // enable receiver
+    // Re-arm FIFO + RX
+    I2C_write(REG_FCR,  0x07);     // reset+enable FIFO
+    I2C_write(REG_EFCR, 0x04);     // enable RX
+
+    svcSleepThread(2 * 1000 * 1000); // 2ms
+    ir_flush_fifo();
+
+    // Do NOT change divisor, but re-write it once more to force latch on picky units
+    I2C_write(REG_LCR, 0x03 | BIT(7));
+    I2C_write(REG_DLL, 10);
+    I2C_write(REG_DLH, 0);
+    I2C_write(REG_LCR, 0x03);
+
+    I2C_write(REG_FCR,  0x07);
+    I2C_write(REG_EFCR, 0x04);
+    ir_flush_fifo();
 }
 
-bool ir_init(u16 bitrate)
+bool ir_init()
 {
 	//static bool inited = false;
 
@@ -48,9 +61,8 @@ bool ir_init(u16 bitrate)
 	//inited = true;
 
 	I2C_init();
-	ir_apply_divisor(bitrate);
+	ir_configure_div10_now()
 
-    printf("Initialized with bitrate: %d\n", bitrate);
 	return true;
 }
 
