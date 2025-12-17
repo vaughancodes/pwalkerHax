@@ -33,3 +33,6 @@ void ir_rx_begin(void);
 u8 ir_rx_available(void);
 u32 ir_rx_read(void *data, u32 max);
 void ir_rx_end(void);
+
+// Tunable bitrate
+extern u16 g_bitrate;
