@@ -22,11 +22,11 @@ void ir_setbitrate(u16 value)
 
 bool ir_init(u16 bitrate)
 {
-	static bool inited = false;
+	//static bool inited = false;
 
-	if (inited)
-		return false;
-	inited = true;
+	//if (inited)
+	//	return false;
+	//inited = true;
 
 	I2C_init();
 	ir_setbitrate(bitrate);
